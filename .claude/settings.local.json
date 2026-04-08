@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(code \"/Users/dylanchong/Downloads/VScode/test 1.html\")",
+      "Bash(open -a \"Visual Studio Code\" \"/Users/dylanchong/Downloads/VScode/test 1.html\")"
+    ]
+  }
+}
