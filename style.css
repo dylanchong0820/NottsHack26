@@ -1,0 +1,328 @@
+/* ── design tokens ─────────────────────────────────────────── */
+:root {
+  --bg:          #0a0a0f;
+  --surface:     #13131c;
+  --border:      #2a2a3d;
+  --accent:      #7c6dfa;
+  --accent-dim:  #3d3580;
+  --success:     #22d48f;
+  --warn:        #f0a030;
+  --danger:      #e84040;
+  --text:        #e8e8f0;
+  --text-muted:  #6b6b88;
+  --font-ui:     'DM Mono', 'Fira Mono', monospace;
+  --canvas-w:    $GODOT_CANVAS_WIDTH;
+  --canvas-h:    $GODOT_CANVAS_HEIGHT;
+}
+
+/* ── reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── header bar ────────────────────────────────────────────── */
+#header {
+  width: 100%;
+  max-width: calc(var(--canvas-w) * 1px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 8px;
+}
+
+#game-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── wallet button ─────────────────────────────────────────── */
+#wallet-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+#wallet-btn:hover { border-color: var(--accent); color: var(--text); }
+#wallet-btn.connected { border-color: var(--success); color: var(--success); }
+#wallet-btn.connected .dot { background: var(--success); }
+
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── canvas wrapper ────────────────────────────────────────── */
+#canvas-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: var(--canvas-w) / var(--canvas-h);
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #000;
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* loading overlay */
+#loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 10;
+  transition: opacity 0.4s;
+}
+#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+#loading-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+#progress-bar-wrap {
+  width: 220px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+/* ── splash screen ─────────────────────────────────────────── */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, #0d2010 0%, #060d06 60%, #020502 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 1000;
+  cursor: pointer;
+  transition: opacity 0.8s ease;
+  overflow: hidden;
+  user-select: none;
+}
+#splash.hidden { opacity: 0; pointer-events: none; }
+
+.splash-glow {
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,120,34,0.18) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+  animation: glow-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -52%) scale(1);    }
+  50%       { opacity: 1;   transform: translate(-50%, -52%) scale(1.12); }
+}
+
+.splash-turtle {
+  position: relative;
+  z-index: 2;
+  margin-bottom: -8px;
+  animation: turtle-bob 2.8s ease-in-out infinite;
+  filter: drop-shadow(0 12px 32px rgba(0,100,0,0.5));
+}
+@keyframes turtle-bob {
+  0%, 100% { transform: translateY(0px)   rotate(0deg);    }
+  40%       { transform: translateY(-14px) rotate(-1.5deg); }
+  70%       { transform: translateY(-6px)  rotate(1deg);    }
+}
+
+.splash-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+.splash-title {
+  font-size: clamp(28px, 5vw, 52px);
+  font-family: var(--font-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8f0c0;
+  text-shadow: 0 0 40px rgba(80,200,80,0.5), 0 2px 4px rgba(0,0,0,0.8);
+}
+.splash-subtitle {
+  font-size: clamp(11px, 1.6vw, 15px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #5a8a5a;
+}
+
+.splash-cta {
+  position: relative;
+  z-index: 2;
+  margin-top: 36px;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #3a6e3a;
+  animation: cta-blink 2s ease-in-out infinite;
+}
+@keyframes cta-blink {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1;   }
+}
+
+.splash-grass {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 90px;
+  pointer-events: none;
+  z-index: 3;
+  overflow: hidden;
+}
+.blade {
+  position: absolute;
+  bottom: 0;
+  width: 6px;
+  border-radius: 3px 3px 0 0;
+  transform-origin: bottom center;
+  animation: sway 3s ease-in-out infinite;
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(6deg); }
+}
+
+.firefly {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #aaff88;
+  box-shadow: 0 0 8px 3px rgba(150,255,100,0.6);
+  animation: fly linear infinite;
+  pointer-events: none;
+}
+@keyframes fly {
+  0%   { transform: translate(0,0) scale(0.5); opacity: 0; }
+  15%  { opacity: 1; }
+  50%  { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0.9; }
+  85%  { opacity: 1; }
+  100% { transform: translate(calc(var(--dx)*2), calc(var(--dy)*0.3)) scale(0.5); opacity: 0; }
+}
+
+.splash-mist {
+  position: absolute;
+  bottom: 0; left: -20%;
+  width: 140%; height: 140px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(10,30,10,0.85) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── toast notification ────────────────────────────────────── */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  max-width: 300px;
+  animation: slide-in 0.25s ease;
+}
+.toast.success { border-color: var(--success); }
+.toast.error   { border-color: var(--danger); }
+.toast.pending { border-color: var(--warn); }
+
+.toast-icon { font-size: 14px; line-height: 1.4; flex-shrink: 0; }
+.toast-body { display: flex; flex-direction: column; gap: 3px; }
+.toast-title { color: var(--text); font-size: 12px; }
+.toast-msg { color: var(--text-muted); font-size: 11px; word-break: break-all; }
+
+@keyframes slide-in {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ── footer ─────────────────────────────────────────────────── */
+#footer {
+  width: 100%;
+  max-width: calc(var(--canvas-w) * 1px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 10px;
+}
+
+#network-badge {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 8px;
+}
+#network-badge.on-chain { border-color: var(--accent-dim); color: var(--accent); }
+
+#tx-link {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: none;
+}
+#tx-link.visible { display: inline; color: var(--accent); }
+#tx-link:hover { text-decoration: underline; }
