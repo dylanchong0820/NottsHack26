@@ -16,67 +16,6 @@
 </head>
 <body>
 
-  <!-- ── splash screen ────────────────────────────────────────── -->
-  <div id="splash" onclick="dismissSplash()">
-    <div class="splash-glow"></div>
-    <div class="splash-mist"></div>
-
-    <div class="firefly" style="left:12%;top:30%;--dx:40px; --dy:-60px;animation-duration:6s; animation-delay:0s;"></div>
-    <div class="firefly" style="left:25%;top:55%;--dx:-30px;--dy:-80px;animation-duration:8s; animation-delay:1s;"></div>
-    <div class="firefly" style="left:70%;top:25%;--dx:-50px;--dy:40px; animation-duration:7s; animation-delay:2s;"></div>
-    <div class="firefly" style="left:80%;top:60%;--dx:20px; --dy:-70px;animation-duration:9s; animation-delay:0.5s;"></div>
-    <div class="firefly" style="left:50%;top:15%;--dx:-40px;--dy:50px; animation-duration:5s; animation-delay:3s;"></div>
-    <div class="firefly" style="left:88%;top:40%;--dx:-60px;--dy:-30px;animation-duration:7.5s;animation-delay:1.5s;"></div>
-    <div class="firefly" style="left:5%; top:70%;--dx:70px; --dy:-40px;animation-duration:6.5s;animation-delay:2.5s;"></div>
-
-    <div class="splash-turtle">
-      <svg viewBox="0 0 220 150" width="280" height="190" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="shellGrad" cx="40%" cy="30%">
-            <stop offset="0%"   stop-color="#4caf50"/>
-            <stop offset="100%" stop-color="#1b5e20"/>
-          </radialGradient>
-          <radialGradient id="bodyGrad" cx="45%" cy="35%">
-            <stop offset="0%"   stop-color="#66bb6a"/>
-            <stop offset="100%" stop-color="#2e7d32"/>
-          </radialGradient>
-        </defs>
-        <ellipse cx="105" cy="140" rx="70" ry="8" fill="rgba(0,40,0,0.45)"/>
-        <ellipse cx="52"  cy="118" rx="18" ry="9" fill="#2e7d32" transform="rotate(25  52  118)"/>
-        <ellipse cx="158" cy="118" rx="18" ry="9" fill="#2e7d32" transform="rotate(-25 158 118)"/>
-        <ellipse cx="62"  cy="95"  rx="17" ry="8" fill="#388e3c" transform="rotate(-20 62  95)"/>
-        <ellipse cx="148" cy="95"  rx="17" ry="8" fill="#388e3c" transform="rotate(20  148 95)"/>
-        <path d="M40 100 Q24 108 27 118" stroke="#388e3c" stroke-width="10" fill="none" stroke-linecap="round"/>
-        <ellipse cx="105" cy="105" rx="62" ry="30" fill="url(#bodyGrad)"/>
-        <ellipse cx="105" cy="94"  rx="56" ry="38" fill="url(#shellGrad)"/>
-        <polygon points="105,58 130,76 126,104 105,110 84,104 80,76" fill="#2e7d32" stroke="#81c784" stroke-width="1.2" stroke-linejoin="round"/>
-        <line x1="105" y1="58"  x2="130" y2="76"  stroke="#81c784" stroke-width="1"/>
-        <line x1="105" y1="58"  x2="80"  y2="76"  stroke="#81c784" stroke-width="1"/>
-        <line x1="130" y1="76"  x2="148" y2="82"  stroke="#81c784" stroke-width="1"/>
-        <line x1="80"  y1="76"  x2="62"  y2="82"  stroke="#81c784" stroke-width="1"/>
-        <line x1="126" y1="104" x2="138" y2="112" stroke="#81c784" stroke-width="1"/>
-        <line x1="84"  y1="104" x2="72"  y2="112" stroke="#81c784" stroke-width="1"/>
-        <ellipse cx="96" cy="76" rx="18" ry="11" fill="rgba(255,255,255,0.09)" transform="rotate(-10 96 76)"/>
-        <ellipse cx="168" cy="100" rx="14" ry="11" fill="#388e3c"/>
-        <circle cx="180" cy="91" r="18" fill="url(#bodyGrad)"/>
-        <ellipse cx="175" cy="85" rx="7" ry="5" fill="rgba(255,255,255,0.1)" transform="rotate(-20 175 85)"/>
-        <circle cx="187" cy="86" r="6"   fill="#1a1a1a"/>
-        <circle cx="187" cy="86" r="3.5" fill="#111"/>
-        <circle cx="189" cy="84" r="1.5" fill="white"/>
-        <circle cx="193" cy="92" r="1.8" fill="#1b5e20"/>
-        <path d="M177 97 Q182 103 188 97" stroke="#1b5e20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      </svg>
-    </div>
-
-    <div class="splash-text">
-      <div class="splash-title">Turtle the Saver</div>
-      <div class="splash-subtitle"><!-- tagline / description --></div>
-    </div>
-
-    <div class="splash-cta">click anywhere to begin</div>
-    <div class="splash-grass" id="splashGrass"></div>
-  </div>
-
   <!-- ── header ─────────────────────────────────────────────── -->
   <div id="header">
     <span id="game-title">$GODOT_PROJECT_NAME</span>
