@@ -6,18 +6,27 @@
 
 const Web3Bridge = (() => {
 
-  // ── CONFIG — replace these for your hackathon ──────────────
-  const DCAI_RPC_URL     = "https://rpc.your-dcai-l3.example";   // L3 RPC endpoint
-  const DCAI_CHAIN_ID    = 12345;                                  // L3 chain ID
-  const DCAI_CHAIN_NAME  = "DCAI L3";
-  const EXPLORER_URL     = "https://explorer.your-dcai-l3.example";
-  const CONTRACT_ADDRESS = "0xYourContractAddressHere";
+  // ── CONFIG ─────────────────────────────────────────────────
+  const DCAI_RPC_URL     = "http://139.180.188.61:8545";
+  const DCAI_CHAIN_ID    = 18441;
+  const DCAI_CHAIN_NAME  = "DCAI";
+  const EXPLORER_URL     = "http://139.180.140.143:3002";
+  const FAUCET_URL       = "http://139.180.140.143/faucet/request";// testnet token faucet
+  const REWARDS_URL      = "http://139.180.140.143/rewards/latest.json";
+
+  // ── your game contract (deploy via Remix, then paste address here) ──
+  const CONTRACT_ADDRESS = "0x46f9423255483643017F1495852770d9317a30b5";
+
+  // ── pre-deployed DCAI L3 contracts ─────────────────────────
+  const OPERATOR_REGISTRY      = "0xb37c81eBC4b1B4bdD5476fe182D6C72133F41db9";
+  const MERKLE_REWARD_DIST     = "0x728f2C63b9A0ff0918F5ffB3D4C2d004107476B7";
 
   // ── ABI — add your contract functions here ─────────────────
   const CONTRACT_ABI = [
     "function submitScore(uint256 score) external",
     "function mintBadge(address to, uint256 badgeId) external",
     "function getScore(address player) external view returns (uint256)",
+    "function getBadges(address player) external view returns (uint256[])",
     "event ScoreSubmitted(address indexed player, uint256 score)",
     "event BadgeMinted(address indexed player, uint256 badgeId)"
   ];
@@ -88,7 +97,7 @@ const Web3Bridge = (() => {
             chainId:           "0x" + DCAI_CHAIN_ID.toString(16),
             chainName:         DCAI_CHAIN_NAME,
             rpcUrls:           [DCAI_RPC_URL],
-            nativeCurrency:    { name: "ETH", symbol: "ETH", decimals: 18 },
+            nativeCurrency:    { name: "tDCAI", symbol: "tDCAI", decimals: 18 },
             blockExplorerUrls: [EXPLORER_URL]
           }]
         });
@@ -154,6 +163,48 @@ const Web3Bridge = (() => {
     }
   }
 
+  // ── claim testnet tokens from faucet ──────────────────────
+  // Called from Godot: JavaScriptBridge.eval("Web3Bridge.claimFaucet()")
+  // 1 tDCAI per claim, 1-hour cooldown per wallet
+  async function claimFaucet() {
+    if (!walletAddress) {
+      toast("error", "wallet not connected", "connect wallet first");
+      return;
+    }
+    toast("pending", "claiming tokens", "requesting tDCAI from faucet...", 10000);
+    try {
+      const res  = await fetch(FAUCET_URL, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ address: walletAddress })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        _showTxLink(data.txHash);
+        toast("success", "tokens received!", "1 tDCAI sent to your wallet");
+        _toGodot("faucetClaimed", data.txHash);
+      } else {
+        toast("error", "faucet failed", data.message || "try again in 1 hour");
+      }
+    } catch (err) {
+      toast("error", "faucet error", err.message);
+    }
+  }
+
+  // ── fetch latest rewards epoch ─────────────────────────────
+  // Called from Godot: JavaScriptBridge.eval("Web3Bridge.getRewardsEpoch()")
+  // Returns scores, weights, merkle metadata for the current epoch
+  async function getRewardsEpoch() {
+    try {
+      const res  = await fetch(REWARDS_URL);
+      const data = await res.json();
+      _toGodot("rewardsEpoch", JSON.stringify(data));
+      return data;
+    } catch (err) {
+      console.error("getRewardsEpoch:", err);
+    }
+  }
+
   // ── private helpers ────────────────────────────────────────
   function _showTxLink(hash) {
     const link = document.getElementById("tx-link");
@@ -168,7 +219,7 @@ const Web3Bridge = (() => {
   }
 
   // ── public API ─────────────────────────────────────────────
-  return { connectWallet, submitScore, mintBadge, getScore };
+  return { connectWallet, submitScore, mintBadge, getScore, claimFaucet, getRewardsEpoch };
 })();
 
 // Make bridge globally accessible so Godot's eval calls work
