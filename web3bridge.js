@@ -18,8 +18,8 @@ const Web3Bridge = (() => {
   const CONTRACT_ADDRESS = "0x46f9423255483643017F1495852770d9317a30b5";
 
   // ── pre-deployed DCAI L3 contracts ─────────────────────────
-  const OPERATOR_REGISTRY      = "0xb37c81eBC4b1B4bdD5476fe182D6C72133F41db9";
-  const MERKLE_REWARD_DIST     = "0x728f2C63b9A0ff0918F5ffB3D4C2d004107476B7";
+  // const OPERATOR_REGISTRY      = "0xb37c81eBC4b1B4bdD5476fe182D6C72133F41db9";
+ //  const MERKLE_REWARD_DIST     = "0x728f2C63b9A0ff0918F5ffB3D4C2d004107476B7";
 
   // ── ABI — add your contract functions here ─────────────────
   const CONTRACT_ABI = [
