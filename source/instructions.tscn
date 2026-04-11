@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://v367h4wyx8ng"]
+
+[ext_resource type="Script" uid="uid://dgqjxcf772mwf" path="res://tutorial(1).gd" id="1_7ls63"]
+[ext_resource type="Texture2D" uid="uid://ds6ck82s07i52" path="res://tutorial(1).png" id="1_h8hbf"]
+
+[node name="instructions" type="Control" unique_id=362721868]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tutorial(1)" type="TextureButton" parent="." unique_id=2060030414]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture_normal = ExtResource("1_h8hbf")
+script = ExtResource("1_7ls63")
+
+[connection signal="pressed" from="Tutorial(1)" to="Tutorial(1)" method="_on_tutorial_pressed"]

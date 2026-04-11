@@ -1,0 +1,244 @@
+[gd_scene format=3 uid="uid://d0m4m8ydkvs81"]
+
+[ext_resource type="Texture2D" uid="uid://y7h4va3mqxfa" path="res://black.jpg" id="1_2o6r5"]
+[ext_resource type="Script" uid="uid://dbvltfvfxpw37" path="res://camera_2d.gd" id="1_dwbse"]
+[ext_resource type="Script" uid="uid://dll4llobhbm67" path="res://world.gd" id="1_hiqwa"]
+[ext_resource type="PackedScene" uid="uid://6wfupbsn70sm" path="res://spawner.tscn" id="2_fj7yv"]
+[ext_resource type="PackedScene" uid="uid://bjyxuu2vbguxq" path="res://trash.tscn" id="2_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://bsi7i36thelw2" path="res://button.tscn" id="3_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://my43h7mthu8e" path="res://turtle.tscn" id="3_gbfbk"]
+[ext_resource type="Script" uid="uid://30fy5gxqhvmp" path="res://background.gd" id="3_ioo17"]
+[ext_resource type="PackedScene" uid="uid://x2ria6h6kpkd" path="res://food.tscn" id="4_036b0"]
+[ext_resource type="Texture2D" uid="uid://ctk1aupr7lhhs" path="res://BGTILE.jpg" id="7_gbfbk"]
+[ext_resource type="Texture2D" uid="uid://d0fqg5ry4ej3c" path="res://left.png" id="9_ic0uy"]
+[ext_resource type="Texture2D" uid="uid://drwcgbeh7rnm" path="res://FGTILE.png" id="9_ioo17"]
+[ext_resource type="Texture2D" uid="uid://jme5lvyq5bwt" path="res://right.png" id="9_wse8f"]
+[ext_resource type="PackedScene" uid="uid://0lhqfdydygbk" path="res://slope.tscn" id="12_k3n1d"]
+[ext_resource type="Texture2D" uid="uid://cq823yrmmcchu" path="res://heartfull.png" id="14_70uel"]
+[ext_resource type="Texture2D" uid="uid://c5j7brrwmypju" path="res://score.png" id="16_2u3nc"]
+[ext_resource type="Texture2D" uid="uid://b51tk8nyc2fg4" path="res://pause.png" id="16_il2jm"]
+[ext_resource type="Texture2D" uid="uid://1ynapaio5exf" path="res://board.png" id="17_udxuc"]
+[ext_resource type="Texture2D" uid="uid://dsxs17asd3a0j" path="res://pause3.png" id="17_wjb0r"]
+[ext_resource type="Texture2D" uid="uid://dgalxs153hbsq" path="res://opaque.png" id="18_cbp6q"]
+[ext_resource type="Texture2D" uid="uid://cmsl2uimrxbno" path="res://pause2.png" id="18_mc2jv"]
+[ext_resource type="Texture2D" uid="uid://bapmudv8ve0bd" path="res://transparent right.png" id="19_26xuy"]
+[ext_resource type="Texture2D" uid="uid://ccngfau10ql6t" path="res://pauseboard.png" id="20_bo7i5"]
+
+[node name="World" type="Node2D" unique_id=612851941]
+script = ExtResource("1_hiqwa")
+
+[node name="Black" type="Sprite2D" parent="." unique_id=822437221]
+position = Vector2(572, 331.5)
+scale = Vector2(1.67, 1.82889)
+texture = ExtResource("1_2o6r5")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2038394909]
+anchor_mode = 0
+script = ExtResource("1_dwbse")
+
+[node name="Bgtile" type="Sprite2D" parent="." unique_id=446517803]
+position = Vector2(2304, 324)
+texture = ExtResource("7_gbfbk")
+script = ExtResource("3_ioo17")
+speed = 1.0
+
+[node name="Turtle" parent="." unique_id=976941804 instance=ExtResource("3_gbfbk")]
+position = Vector2(161, 326)
+
+[node name="Spawner" parent="." unique_id=498651543 node_paths=PackedStringArray("trash_container") instance=ExtResource("2_fj7yv")]
+position = Vector2(1234, 220)
+trash_scene = ExtResource("2_tlwt5")
+food_scene = ExtResource("4_036b0")
+trash_container = NodePath("../Trash_Container")
+
+[node name="Spawner2" parent="." unique_id=400683010 node_paths=PackedStringArray("trash_container") instance=ExtResource("2_fj7yv")]
+position = Vector2(1200, 436)
+trash_scene = ExtResource("2_tlwt5")
+food_scene = ExtResource("4_036b0")
+trash_container = NodePath("../Trash_Container")
+
+[node name="Trash_Container" type="Node2D" parent="." unique_id=369444130]
+
+[node name="Button" parent="." unique_id=1288142049 instance=ExtResource("3_aqk2v")]
+position = Vector2(336, 216)
+direction = -1.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Button" unique_id=181662653]
+self_modulate = Color(1, 1, 1, 0.784314)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("9_ic0uy")
+
+[node name="Button2" parent="." unique_id=157959807 instance=ExtResource("3_aqk2v")]
+position = Vector2(336, 434)
+key = "ui_right"
+direction = 1.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Button2" unique_id=1274794898]
+modulate = Color(1, 1, 1, 0.784314)
+self_modulate = Color(1, 1, 1, 0.784314)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("9_wse8f")
+
+[node name="Fgtile" type="Sprite2D" parent="." unique_id=1939896548]
+position = Vector2(2304, 324)
+texture = ExtResource("9_ioo17")
+script = ExtResource("3_ioo17")
+speed = 2.0
+
+[node name="slope" parent="." unique_id=161677782 instance=ExtResource("12_k3n1d")]
+position = Vector2(224, 479)
+
+[node name="slope2" parent="." unique_id=1714095755 instance=ExtResource("12_k3n1d")]
+position = Vector2(224, 171)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=19875140]
+
+[node name="Heart1" type="TextureRect" parent="CanvasLayer" unique_id=1578438151]
+offset_left = 13.000001
+offset_top = 11.9999695
+offset_right = 1277.0
+offset_bottom = 1276.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("14_70uel")
+
+[node name="Heart2" type="TextureRect" parent="CanvasLayer" unique_id=1039161725]
+offset_left = 125.99999
+offset_top = 13.999999
+offset_right = 1390.0
+offset_bottom = 1278.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("14_70uel")
+
+[node name="Heart3" type="TextureRect" parent="CanvasLayer" unique_id=2082416368]
+offset_left = 238.99998
+offset_top = 12.999999
+offset_right = 1503.0
+offset_bottom = 1277.0
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("14_70uel")
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer" unique_id=1574816305]
+offset_left = 956.00006
+offset_top = 45.0
+offset_right = 996.1702
+offset_bottom = 68.0
+scale = Vector2(3, 3)
+text = "0"
+
+[node name="PauseButton" type="TextureButton" parent="CanvasLayer" unique_id=1655114436]
+offset_left = 1042.0
+offset_top = 29.0
+offset_right = 2306.0
+offset_bottom = 1293.0
+scale = Vector2(0.07, 0.07)
+texture_normal = ExtResource("16_il2jm")
+texture_pressed = ExtResource("17_wjb0r")
+texture_hover = ExtResource("18_mc2jv")
+
+[node name="ScoreImage" type="TextureRect" parent="CanvasLayer" unique_id=1109336135]
+offset_left = 778.0
+offset_top = 27.0
+offset_right = 1157.0
+offset_bottom = 258.0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("16_2u3nc")
+
+[node name="PauseOverlay" type="Control" parent="CanvasLayer" unique_id=1905593851]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseDimOverlay" type="ColorRect" parent="CanvasLayer/PauseOverlay" unique_id=828102694]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.14901961)
+
+[node name="PauseBoard" type="TextureRect" parent="CanvasLayer/PauseOverlay" unique_id=454583833]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 38.0
+offset_right = 1202.0
+offset_bottom = 686.0
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("20_bo7i5")
+
+[node name="ResumeButton" type="TextureButton" parent="CanvasLayer/PauseOverlay" unique_id=242549088]
+layout_mode = 0
+offset_left = 113.99999
+offset_top = 434.99997
+offset_right = 1378.0
+offset_bottom = 1699.0
+scale = Vector2(0.1, 0.1)
+texture_normal = ExtResource("9_wse8f")
+texture_pressed = ExtResource("18_cbp6q")
+texture_hover = ExtResource("19_26xuy")
+
+[node name="GameOverOverlay" type="Control" parent="CanvasLayer" unique_id=1840873327]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DimOverlay" type="ColorRect" parent="CanvasLayer/GameOverOverlay" unique_id=1514813506]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5019608)
+
+[node name="GameOverBoard" type="TextureRect" parent="CanvasLayer/GameOverOverlay" unique_id=354541683]
+layout_mode = 0
+offset_left = 61.0
+offset_top = 32.0
+offset_right = 1213.0
+offset_bottom = 680.0
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("17_udxuc")
+
+[node name="RestartButton" type="TextureButton" parent="CanvasLayer/GameOverOverlay" unique_id=88145250]
+layout_mode = 0
+offset_left = 147.00006
+offset_top = 494.0
+offset_right = 1411.0
+offset_bottom = 1758.0
+scale = Vector2(0.05, 0.05)
+texture_normal = ExtResource("9_wse8f")
+texture_pressed = ExtResource("18_cbp6q")
+texture_hover = ExtResource("19_26xuy")
+
+[node name="FinalScoreLabel" type="Label" parent="CanvasLayer/GameOverOverlay" unique_id=427127246]
+layout_mode = 0
+offset_left = 406.00003
+offset_top = 341.0
+offset_right = 446.00003
+offset_bottom = 364.0
+scale = Vector2(3, 3)
+
+[connection signal="screenshake_gameover" from="Camera2D" to="." method="_on_screenshake_gameover"]
+[connection signal="food_eaten" from="Turtle" to="." method="_on_turtle_food_eaten"]
+[connection signal="screenshake" from="Turtle" to="Camera2D" method="_on_turtle_screenshake"]
+[connection signal="trash_hit" from="Turtle" to="." method="_on_turtle_trash_hit"]
+[connection signal="hit" from="Button" to="." method="_on_button_hit"]
+[connection signal="miss" from="Button" to="." method="_on_button_miss"]
+[connection signal="miss" from="Button" to="Camera2D" method="_on_button_miss"]
+[connection signal="miss" from="Button" to="Turtle" method="_on_button_miss"]
+[connection signal="hit" from="Button2" to="." method="_on_button_2_hit"]
+[connection signal="miss" from="Button2" to="." method="_on_button_2_miss"]
+[connection signal="miss" from="Button2" to="Camera2D" method="_on_button_2_miss"]
+[connection signal="miss" from="Button2" to="Turtle" method="_on_button_2_miss"]
+[connection signal="pressed" from="CanvasLayer/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PauseOverlay/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverOverlay/RestartButton" to="." method="_on_restart_pressed"]

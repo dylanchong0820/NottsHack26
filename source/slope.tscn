@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://0lhqfdydygbk"]
+
+[node name="slope" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="."]
+rotation = 1.5708
+scale = Vector2(3.75, 4.0625)
+polygon = PackedVector2Array(0, -16, -21.3333, 15.7538, 21.3333, 15.7538)

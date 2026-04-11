@@ -1,0 +1,51 @@
+[gd_scene load_steps=10 format=3 uid="uid://x2ria6h6kpkd"]
+
+[ext_resource type="Script" uid="uid://bhpvwmpirowk1" path="res://trash.gd" id="1_pohk7"]
+[ext_resource type="Texture2D" uid="uid://wi1y60pq7bf" path="res://apple2.png" id="2_5fm71"]
+[ext_resource type="Texture2D" uid="uid://6lst7slxpsy3" path="res://apple.png" id="3_lu35j"]
+[ext_resource type="Texture2D" uid="uid://bidw6co88l2s" path="res://vege.png" id="4_kktf7"]
+[ext_resource type="Texture2D" uid="uid://4m8fjjdqym5p" path="res://jellyfish.png" id="5_kktf7"]
+[ext_resource type="Texture2D" uid="uid://cccmgl178icv4" path="res://jellyfish2.png" id="6_hojwv"]
+[ext_resource type="Texture2D" uid="uid://dwb6311vyw70w" path="res://kelp.png" id="7_5yi55"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8qfn7"]
+size = Vector2(164, 88)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5yi55"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_5fm71")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lu35j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_kktf7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_kktf7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_hojwv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_5yi55")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="World" type="Node2D"]
+
+[node name="Food" type="CharacterBody2D" parent="." groups=["food"]]
+script = ExtResource("1_pohk7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Food"]
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_8qfn7")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Food"]
+scale = Vector2(0.1, 0.1)
+sprite_frames = SubResource("SpriteFrames_5yi55")
