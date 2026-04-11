@@ -48,7 +48,7 @@
       width: 100%;
       max-width: 1200px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       padding: 10px 16px 8px;
     }
@@ -58,44 +58,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
-      padding-top: 8px;
     }
-
-    /* ── right-side header column ──────────────────────────────── */
-    #header-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-    }
-
-    /* ── score panel ───────────────────────────────────────────── */
-    #score-panel {
-      display: none;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-    }
-    #score-panel.visible { display: flex; }
-
-    .score-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .score-label {
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-    .score-value {
-      font-size: 12px;
-      color: var(--text);
-      min-width: 28px;
-      text-align: right;
-    }
-    .score-value.highlight { color: var(--accent); }
 
     /* ── wallet button ─────────────────────────────────────────── */
     #wallet-btn {
@@ -217,14 +180,20 @@
     #tx-link.visible { display: inline; color: var(--accent); }
     #tx-link:hover { text-decoration: underline; }
 
-    /* ── badge display ─────────────────────────────────────────── */
+    /* ── badge + score bar ─────────────────────────────────────── */
     #badge-bar {
       width: 100%;
       max-width: 1200px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
       padding: 0 16px 6px;
+    }
+
+    #badge-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     #badge-label {
@@ -251,6 +220,33 @@
     .badge-item.bronze.earned { border-color: #cd7f32; color: #cd7f32; }
     .badge-item.silver.earned { border-color: #aaa;    color: #aaa; }
     .badge-item.gold.earned   { border-color: #ffd700; color: #ffd700; }
+
+    /* ── score panel (right side of badge bar) ─────────────────── */
+    #score-panel {
+      display: none;
+      align-items: center;
+      gap: 16px;
+    }
+    #score-panel.visible { display: flex; }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .score-label {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .score-value {
+      font-size: 12px;
+      color: var(--text);
+      min-width: 24px;
+      text-align: right;
+    }
+    .score-value.highlight { color: var(--accent); }
 
     /* ── toast notification ────────────────────────────────────── */
     #toast-container {
@@ -293,31 +289,31 @@
   <!-- ── header ─────────────────────────────────────────────── -->
   <div id="header">
     <span id="game-title">Turtles Must Eat</span>
-    <div id="header-right">
-      <button id="wallet-btn" onclick="Web3Bridge.connectWallet()">
-        <span class="dot"></span>
-        <span id="wallet-label">connect wallet</span>
-      </button>
-      <!-- score panel: hidden until wallet connects -->
-      <div id="score-panel">
-        <div class="score-row">
-          <span class="score-label">best</span>
-          <span class="score-value" id="score-best">—</span>
-        </div>
-        <div class="score-row">
-          <span class="score-label">last</span>
-          <span class="score-value" id="score-last">—</span>
-        </div>
-      </div>
-    </div>
+    <button id="wallet-btn" onclick="Web3Bridge.connectWallet()">
+      <span class="dot"></span>
+      <span id="wallet-label">connect wallet</span>
+    </button>
   </div>
 
-  <!-- ── badge bar ────────────────────────────────────────────── -->
+  <!-- ── badge + score bar ────────────────────────────────────── -->
   <div id="badge-bar">
-    <span id="badge-label">badges</span>
-    <div class="badge-item bronze" id="badge-bronze">🟫 Bronze</div>
-    <div class="badge-item silver" id="badge-silver">⬜ Silver</div>
-    <div class="badge-item gold"   id="badge-gold">🟡 Gold</div>
+    <div id="badge-left">
+      <span id="badge-label">badges</span>
+      <div class="badge-item bronze" id="badge-bronze">🟫 Bronze</div>
+      <div class="badge-item silver" id="badge-silver">⬜ Silver</div>
+      <div class="badge-item gold"   id="badge-gold">🟡 Gold</div>
+    </div>
+    <!-- score panel: hidden until wallet connects -->
+    <div id="score-panel">
+      <div class="score-row">
+        <span class="score-label">best</span>
+        <span class="score-value" id="score-best">—</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">last</span>
+        <span class="score-value" id="score-last">—</span>
+      </div>
+    </div>
   </div>
 
   <!-- ── game canvas ────────────────────────────────────────── -->
