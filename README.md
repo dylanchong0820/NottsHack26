@@ -1,4 +1,4 @@
-# 🐢 Turtles Must Eat
+# Turtles Must Eat
 
 > A blockchain-integrated rhythm game built for **NottsHack x DCAI Hackathon 2026**
 
