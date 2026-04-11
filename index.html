@@ -88,9 +88,9 @@
     /* ── canvas wrapper ────────────────────────────────────────── */
     #canvas-wrap {
       position: relative;
-      /* Game viewport is 800×600 (4:3) — constrain so it never crops */
-      width: min(100%, calc((100dvh - 110px) * 4 / 3));
-      aspect-ratio: 4 / 3;
+      /* Game is 1152×648 (16:9) — never let container be non-16:9 */
+      width: min(100%, calc((100dvh - 110px) * 16 / 9));
+      aspect-ratio: 16 / 9;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -99,8 +99,9 @@
 
     #canvas {
       display: block;
-      width: 100%;
-      height: 100%;
+      /* canvasResizePolicy:0 — Godot won't override these */
+      width: 100% !important;
+      height: 100% !important;
       border: 0;
     }
 
@@ -292,9 +293,25 @@
   <!-- ── godot engine ───────────────────────────────────────── -->
   <script src="index.js"></script>
   <script>
-    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8335864,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    // canvasResizePolicy:0 — we control canvas size; Godot won't override to window.innerWidth/Height
+    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8335864,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     const GODOT_THREADS_ENABLED = false;
     const engine = new Engine(GODOT_CONFIG);
+
+    // Pre-size the canvas pixel buffer to match the 16:9 container BEFORE Godot reads it.
+    // With policy 0 Godot uses canvas.width/height as the viewport — these must be set first.
+    (function syncCanvasToContainer() {
+      const wrap   = document.getElementById('canvas-wrap');
+      const canvas = document.getElementById('canvas');
+      const dpr    = window.devicePixelRatio || 1;
+      canvas.width  = Math.round(wrap.clientWidth  * dpr);
+      canvas.height = Math.round(wrap.clientHeight * dpr);
+      // Keep in sync if the window is resized
+      window.addEventListener('resize', () => {
+        canvas.width  = Math.round(wrap.clientWidth  * dpr);
+        canvas.height = Math.round(wrap.clientHeight * dpr);
+      });
+    })();
 
     (function () {
       const statusOverlay = document.getElementById('status');
