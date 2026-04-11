@@ -215,9 +215,23 @@ const Web3Bridge = (() => {
     try {
       const badges = await contract.getBadges(walletAddress);
       const ids = badges.map(b => Number(b));
-      if (ids.includes(1)) document.getElementById("badge-bronze").classList.add("earned");
-      if (ids.includes(2)) document.getElementById("badge-silver").classList.add("earned");
-      if (ids.includes(3)) document.getElementById("badge-gold").classList.add("earned");
+
+      // Count how many of each badge type the player owns
+      const count = { 1: 0, 2: 0, 3: 0 };
+      ids.forEach(id => { if (count[id] !== undefined) count[id]++; });
+
+      // Light up badge + show count if > 1
+      [
+        { el: "badge-bronze", id: 1, label: "🟫 Bronze" },
+        { el: "badge-silver", id: 2, label: "⬜ Silver" },
+        { el: "badge-gold",   id: 3, label: "🟡 Gold"   },
+      ].forEach(({ el, id, label }) => {
+        const node = document.getElementById(el);
+        if (count[id] > 0) {
+          node.classList.add("earned");
+          node.textContent = count[id] > 1 ? `${label} ×${count[id]}` : label;
+        }
+      });
     } catch (err) {
       console.error("loadBadges:", err);
     }
