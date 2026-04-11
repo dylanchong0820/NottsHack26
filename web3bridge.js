@@ -76,6 +76,10 @@ const Web3Bridge = (() => {
 
       toast("success", "wallet connected", short);
       _toGodot("walletConnected", walletAddress);
+
+      // load badges immediately after connecting
+      await _loadBadges();
+
       return walletAddress;
     } catch (err) {
       toast("error", "connection failed", err.message);
@@ -144,6 +148,7 @@ const Web3Bridge = (() => {
       _showTxLink(receipt.hash);
       toast("success", "badge minted!", "badge #" + badgeId + " is yours");
       _toGodot("badgeMinted", receipt.hash);
+      await _loadBadges();
     } catch (err) {
       toast("error", "mint failed", err.reason || err.message);
       _toGodot("txFailed", err.message);
@@ -202,6 +207,19 @@ const Web3Bridge = (() => {
       return data;
     } catch (err) {
       console.error("getRewardsEpoch:", err);
+    }
+  }
+
+  // ── load + display badges ──────────────────────────────────
+  async function _loadBadges() {
+    try {
+      const badges = await contract.getBadges(walletAddress);
+      const ids = badges.map(b => Number(b));
+      if (ids.includes(1)) document.getElementById("badge-bronze").classList.add("earned");
+      if (ids.includes(2)) document.getElementById("badge-silver").classList.add("earned");
+      if (ids.includes(3)) document.getElementById("badge-gold").classList.add("earned");
+    } catch (err) {
+      console.error("loadBadges:", err);
     }
   }
 

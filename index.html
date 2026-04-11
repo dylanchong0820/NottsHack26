@@ -90,8 +90,7 @@
       position: relative;
       flex: 1;
       min-height: 0;
-      aspect-ratio: 16 / 9;
-      max-width: 100%;
+      width: 100%;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -173,6 +172,41 @@
     #tx-link.visible { display: inline; color: var(--accent); }
     #tx-link:hover { text-decoration: underline; }
 
+    /* ── badge display ─────────────────────────────────────────── */
+    #badge-bar {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 6px;
+    }
+
+    #badge-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      opacity: 0.3;
+      transition: opacity 0.3s, border-color 0.3s;
+    }
+    .badge-item.earned { opacity: 1; }
+    .badge-item.bronze.earned { border-color: #cd7f32; color: #cd7f32; }
+    .badge-item.silver.earned { border-color: #aaa;    color: #aaa; }
+    .badge-item.gold.earned   { border-color: #ffd700; color: #ffd700; }
+
     /* ── toast notification ────────────────────────────────────── */
     #toast-container {
       position: fixed;
@@ -220,6 +254,14 @@
       <span class="dot"></span>
       <span id="wallet-label">connect wallet</span>
     </button>
+  </div>
+
+  <!-- ── badge bar ────────────────────────────────────────────── -->
+  <div id="badge-bar">
+    <span id="badge-label">badges</span>
+    <div class="badge-item bronze" id="badge-bronze">🟫 Bronze</div>
+    <div class="badge-item silver" id="badge-silver">⬜ Silver</div>
+    <div class="badge-item gold"   id="badge-gold">🟡 Gold</div>
   </div>
 
   <!-- ── game canvas ────────────────────────────────────────── -->
