@@ -88,9 +88,9 @@
     /* ── canvas wrapper ────────────────────────────────────────── */
     #canvas-wrap {
       position: relative;
-      /* Constrain to 16:9 — never taller than available space (header+badges+footer ≈ 110px) */
-      width: min(100%, calc((100dvh - 110px) * 16 / 9));
-      aspect-ratio: 16 / 9;
+      /* Game viewport is 800×600 (4:3) — constrain so it never crops */
+      width: min(100%, calc((100dvh - 110px) * 4 / 3));
+      aspect-ratio: 4 / 3;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
