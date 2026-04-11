@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
   <title>Turtles Must Eat</title>
   <meta name="theme-color" content="#0a0a0f" />
   <link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
@@ -40,6 +40,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      touch-action: none;
     }
 
     /* ── header bar ────────────────────────────────────────────── */
@@ -105,6 +106,8 @@
       border: 0;
     }
 
+    #canvas:focus { outline: none; }
+
     /* ── godot status overlay ──────────────────────────────────── */
     #status {
       position: absolute;
@@ -116,6 +119,7 @@
       justify-content: center;
       gap: 20px;
       z-index: 10;
+      visibility: hidden;
     }
 
     #status-splash {
@@ -125,11 +129,14 @@
       object-fit: contain;
     }
     #status-splash.show-image--false { display: none; }
+    #status-splash.fullsize--true { height: 100%; width: 100%; object-fit: contain; }
+    #status-splash.use-filter--false { image-rendering: pixelated; }
 
     #status-progress {
       width: 220px;
       height: 4px;
       accent-color: var(--accent);
+      display: none;
     }
     #status-notice {
       display: none;
@@ -242,11 +249,9 @@
       from { transform: translateX(20px); opacity: 0; }
       to   { transform: translateX(0);    opacity: 1; }
     }
-
   </style>
 </head>
 <body>
-
 
   <!-- ── header ─────────────────────────────────────────────── -->
   <div id="header">
@@ -271,7 +276,7 @@
       Your browser does not support the canvas tag.
     </canvas>
     <div id="status">
-      <img id="status-splash" class="show-image--true" src="index.png" alt="">
+      <img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
       <progress id="status-progress"></progress>
       <div id="status-notice"></div>
     </div>
@@ -286,7 +291,6 @@
   <!-- ── toasts ─────────────────────────────────────────────── -->
   <div id="toast-container"></div>
 
-
   <!-- ── web3 bridge ────────────────────────────────────────── -->
   <script src="web3bridge.js"></script>
 
@@ -294,7 +298,7 @@
   <script src="index.js"></script>
   <script>
     // canvasResizePolicy:0 — we control canvas size; Godot won't override to window.innerWidth/Height
-    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8335864,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":8335928,"index.wasm":37695054},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     const GODOT_THREADS_ENABLED = false;
     const engine = new Engine(GODOT_CONFIG);
 
@@ -306,7 +310,6 @@
       const dpr    = window.devicePixelRatio || 1;
       canvas.width  = Math.round(wrap.clientWidth  * dpr);
       canvas.height = Math.round(wrap.clientHeight * dpr);
-      // Keep in sync if the window is resized
       window.addEventListener('resize', () => {
         canvas.width  = Math.round(wrap.clientWidth  * dpr);
         canvas.height = Math.round(wrap.clientHeight * dpr);
@@ -314,9 +317,9 @@
     })();
 
     (function () {
-      const statusOverlay = document.getElementById('status');
+      const statusOverlay  = document.getElementById('status');
       const statusProgress = document.getElementById('status-progress');
-      const statusNotice = document.getElementById('status-notice');
+      const statusNotice   = document.getElementById('status-notice');
       let initializing = true;
       let statusMode = '';
 
@@ -329,7 +332,7 @@
         }
         statusOverlay.style.visibility = 'visible';
         statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
-        statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+        statusNotice.style.display   = mode === 'notice'   ? 'block' : 'none';
         statusMode = mode;
       }
 
@@ -351,8 +354,29 @@
       }
 
       const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
+
       if (missing.length !== 0) {
-        displayFailureNotice('Missing features:\n' + missing.join('\n'));
+        if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+          let serviceWorkerRegistrationPromise;
+          try {
+            serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+          } catch (err) {
+            serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+          }
+          Promise.race([
+            serviceWorkerRegistrationPromise.then((registration) => {
+              if (registration != null) return Promise.reject(new Error('Service worker already exists.'));
+              return registration;
+            }).then(() => engine.installServiceWorker()),
+            new Promise((resolve) => { setTimeout(() => resolve(), 2000); }),
+          ]).then(() => {
+            window.location.reload();
+          }).catch((err) => {
+            console.error('Error while registering service worker:', err);
+          });
+        } else {
+          displayFailureNotice('Error\nThe following features required to run Godot projects on the Web are missing:\n' + missing.join('\n'));
+        }
       } else {
         setStatusMode('progress');
         engine.startGame({
