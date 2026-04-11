@@ -48,7 +48,7 @@
       width: 100%;
       max-width: 1200px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       padding: 10px 16px 8px;
     }
@@ -58,7 +58,44 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
+      padding-top: 8px;
     }
+
+    /* ── right-side header column ──────────────────────────────── */
+    #header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    /* ── score panel ───────────────────────────────────────────── */
+    #score-panel {
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    #score-panel.visible { display: flex; }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .score-label {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .score-value {
+      font-size: 12px;
+      color: var(--text);
+      min-width: 28px;
+      text-align: right;
+    }
+    .score-value.highlight { color: var(--accent); }
 
     /* ── wallet button ─────────────────────────────────────────── */
     #wallet-btn {
@@ -256,10 +293,23 @@
   <!-- ── header ─────────────────────────────────────────────── -->
   <div id="header">
     <span id="game-title">Turtles Must Eat</span>
-    <button id="wallet-btn" onclick="Web3Bridge.connectWallet()">
-      <span class="dot"></span>
-      <span id="wallet-label">connect wallet</span>
-    </button>
+    <div id="header-right">
+      <button id="wallet-btn" onclick="Web3Bridge.connectWallet()">
+        <span class="dot"></span>
+        <span id="wallet-label">connect wallet</span>
+      </button>
+      <!-- score panel: hidden until wallet connects -->
+      <div id="score-panel">
+        <div class="score-row">
+          <span class="score-label">best</span>
+          <span class="score-value" id="score-best">—</span>
+        </div>
+        <div class="score-row">
+          <span class="score-label">last</span>
+          <span class="score-value" id="score-last">—</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ── badge bar ────────────────────────────────────────────── -->

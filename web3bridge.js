@@ -32,10 +32,33 @@ const Web3Bridge = (() => {
   ];
 
   // ── internal state ─────────────────────────────────────────
-  let provider      = null;
-  let signer        = null;
-  let contract      = null;
-  let walletAddress = null;
+  let provider         = null;
+  let signer           = null;
+  let contract         = null;
+  let walletAddress    = null;
+  let lastSessionScore = null;   // stored in memory, resets on page reload
+
+  // ── score panel helpers ────────────────────────────────────
+  async function _refreshScores() {
+    try {
+      const best = await contract.getScore(walletAddress);
+      const bestNum = Number(best);
+      const bestEl = document.getElementById("score-best");
+      bestEl.textContent = bestNum > 0 ? bestNum : "—";
+      bestEl.className = "score-value" + (bestNum > 0 ? " highlight" : "");
+    } catch (err) {
+      console.error("refreshScores:", err);
+    }
+  }
+
+  function _setLastScore(score) {
+    lastSessionScore = score;
+    const el = document.getElementById("score-last");
+    if (el) {
+      el.textContent = score;
+      el.className = "score-value highlight";
+    }
+  }
 
   // ── toast helper ───────────────────────────────────────────
   function toast(type, title, msg, duration = 5000) {
@@ -77,8 +100,10 @@ const Web3Bridge = (() => {
       toast("success", "wallet connected", short);
       _toGodot("walletConnected", walletAddress);
 
-      // load badges immediately after connecting
+      // load badges + scores immediately after connecting
       await _loadBadges();
+      document.getElementById("score-panel").classList.add("visible");
+      await _refreshScores();
 
       return walletAddress;
     } catch (err) {
@@ -127,6 +152,10 @@ const Web3Bridge = (() => {
       _showTxLink(receipt.hash);
       toast("success", "score recorded!", "score: " + score + " on-chain");
       _toGodot("scoreSubmitted", receipt.hash);
+
+      // update score panel: save last session score + re-read best from chain
+      _setLastScore(score);
+      await _refreshScores();
     } catch (err) {
       toast("error", "tx failed", err.reason || err.message);
       _toGodot("txFailed", err.message);
